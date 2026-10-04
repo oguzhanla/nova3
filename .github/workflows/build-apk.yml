@@ -25,11 +25,11 @@ jobs:
         with:
           node-version: 20
 
-      - name: Setup Java JDK 17
+      - name: Setup Java JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
@@ -43,15 +43,19 @@ jobs:
           npx cap add android || true
           npx cap sync android
 
-      - name: Fix Duplicate Kotlin & Android Config
+      - name: Configure Gradle & Kotlin Fixes
         run: |
-          # build.gradle dosyalarına çakışan modülleri zorunlu olarak tek sürüme sabitleyen kuralı ekler
+          # Java 21 uyumluluğu ve duplicate kotlin sınıflarını engelleme ayarları
+          cat << 'EOF' >> android/gradle.properties
+          android.useAndroidX=true
+          android.enableJetifier=true
+          kotlin.stdlib.default.dependency=false
+          EOF
+
+          # Çakışan eski jdk7 ve jdk8 kütüphanelerini Gradle konfigürasyonundan dışla
           cat << 'EOF' >> android/app/build.gradle
 
           configurations.all {
-              resolutionStrategy {
-                  force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
-              }
               exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
               exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
           }
