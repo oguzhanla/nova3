@@ -13,6 +13,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Extract Project Files
+        run: |
+          if [ -f "novastream-tv.zip" ]; then
+            echo "novastream-tv.zip bulundu, çıkartılıyor..."
+            unzip -o novastream-tv.zip
+          fi
+          ls -la
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
