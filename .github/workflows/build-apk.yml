@@ -29,7 +29,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '21'
+          java-version: '17'
 
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
@@ -42,6 +42,17 @@ jobs:
           npm install @capacitor/android @capacitor/core @capacitor/cli --legacy-peer-deps
           npx cap add android || true
           npx cap sync android
+
+      - name: Fix Duplicate Kotlin Classes
+        run: |
+          # app/build.gradle içine çakışan kotlin-stdlib modüllerini dışlama kuralı ekler
+          cat << 'EOF' >> android/app/build.gradle
+
+          configurations.all {
+              exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
+              exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+          }
+          EOF
 
       - name: Build Debug APK
         run: |
