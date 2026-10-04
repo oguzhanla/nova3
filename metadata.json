@@ -1,0 +1,8 @@
+{
+  "name": "Remix NovaStream TV - Android TV Medya \u0026 CloudStream Oynatıcı",
+  "description": "Android TV Box için donanım hızlandırmalı, Xtream Codes ve CloudStream eklenti destekli yeni nesil medya oynatıcı ve IPTV merkezi.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
