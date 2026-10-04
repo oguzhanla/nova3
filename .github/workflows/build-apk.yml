@@ -24,17 +24,15 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Install Dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Build Web Assets
         run: npm run build
 
-      - name: Sync Capacitor Android
+      - name: Install Capacitor Android & Sync
         run: |
+          npm install @capacitor/android @capacitor/core @capacitor/cli --legacy-peer-deps
           npx cap add android || true
           npx cap sync android
 
@@ -42,7 +40,7 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
